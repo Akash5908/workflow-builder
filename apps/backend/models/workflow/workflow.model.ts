@@ -2,19 +2,22 @@ import mongoose, { Schema, Types } from "mongoose";
 
 const nodeSchema = new Schema(
   {
-    id: String,
+    id: { type: String },
     position: {
       x: Number,
       y: Number,
     },
     data: { type: Schema.Types.Mixed, default: {} },
+    type: String,
   },
   { _id: false },
 );
 
 const edgeSchema = new Schema(
   {
-    id: String,
+    id: {
+      type: String,
+    },
     source: String,
     target: String,
   },
@@ -30,6 +33,7 @@ const workflowSchema = new Schema({
   userId: {
     type: Types.ObjectId,
     required: true,
+    unique: false,
     ref: "User",
   },
   nodes: {

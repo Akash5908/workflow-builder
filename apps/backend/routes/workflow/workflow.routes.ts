@@ -5,7 +5,6 @@ import { WorkflowModel } from "../../models";
 import { verifyToken } from "../../middleware/verify-token";
 
 const router: express.Router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET;
 
 router.post("/workflow", verifyToken, async (req, res) => {
   const user = req.user!;
@@ -17,10 +16,12 @@ router.post("/workflow", verifyToken, async (req, res) => {
     });
   }
   try {
+    console.log(data, user);
     const workflow = await WorkflowModel.create({
       userId: user.userId,
       workflowName: data.workflowName,
     });
+
     return res.status(200).json({
       success: true,
       workflowId: workflow._id,
@@ -36,7 +37,6 @@ router.post("/workflow", verifyToken, async (req, res) => {
 router.put("/workflow/:id", verifyToken, async (req, res) => {
   const userId = req.user?.userId;
   const workflowId = req.params.id;
-  console.log(req.body.workflow);
   try {
     const workflow = await WorkflowModel.findOneAndUpdate(
       {
@@ -46,7 +46,7 @@ router.put("/workflow/:id", verifyToken, async (req, res) => {
       { $set: req.body.workflow },
       { new: true, runValidators: true },
     );
-    console.log(workflow);
+
     return res.status(200).json({
       success: true,
       workflow: workflow,

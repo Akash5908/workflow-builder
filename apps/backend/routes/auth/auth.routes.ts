@@ -3,9 +3,10 @@ import { loginValidator, signupValidator } from "../../validator";
 import bcrypt from "bcrypt";
 import { UserModel } from "../../models/auth/user.model";
 import jwt from "jsonwebtoken";
+import config from "../../config";
+import { verifyToken } from "../../middleware/verify-token";
 
 const router: express.Router = express.Router();
-export const JWT_SECRET = process.env.JWT_SECRET;
 
 router.post("/login", async (req, res) => {
   const { success, data } = loginValidator.safeParse(req.body);
@@ -31,7 +32,7 @@ router.post("/login", async (req, res) => {
     }
     const token = jwt.sign(
       { userId: user?._id, userName: user?.username },
-      JWT_SECRET!,
+      config.jwtSecret,
     );
     return res.status(200).json({
       success: true,
@@ -73,6 +74,26 @@ router.post("/signup", async (req, res) => {
     return res.status(403).json({
       success: false,
       error: "Username/email already present. ",
+    });
+  }
+});
+
+router.get("/me", verifyToken, async (req, res) => {
+  const userId = req.user?.userId;
+  try {
+    const user = await UserModel.findById(userId);
+    res.status(200).json({
+      success: true,
+      user: {
+        username: user?.username,
+        email: user?.email,
+        name: user?.name,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: "Internal server error.",
     });
   }
 });

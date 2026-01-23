@@ -13,10 +13,18 @@ export interface TriggerProp {
     title: string;
   };
 }
+export interface WorkflowProp {
+  _id: string;
+  workflowName: string;
+  userId: string;
+  nodes: NodeType[];
+  edges: EdgeType[];
+  createdAt: string;
+}
 
 export interface ActionProp {
   id: string;
-  metadata: any;
+  data: any;
 }
 
 export interface NodeType {
@@ -26,6 +34,7 @@ export interface NodeType {
     y: number;
   };
   data: any;
+  type: string;
 }
 
 export interface EdgeType {
@@ -36,5 +45,5 @@ export interface EdgeType {
 
 export interface NodeProp {
   id: string;
-  metadata: any;
+  data: any;
 }

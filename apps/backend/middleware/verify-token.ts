@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../routes";
+import config from "../config";
 
 export const verifyToken = (
   req: Request,
@@ -16,7 +16,7 @@ export const verifyToken = (
     });
   }
   try {
-    const decode = jwt.verify(token, JWT_SECRET!) as { userId: string };
+    const decode = jwt.verify(token, config.jwtSecret) as { userId: string };
     req.user = { userId: decode.userId };
     next();
   } catch (error) {

@@ -1,9 +1,7 @@
 import { Position, Handle } from "@xyflow/react";
 
 interface ClickType {
-  metadata: {
-    kind: string;
-  };
+  label: string;
 }
 
 const EmailAction = ({
@@ -21,7 +19,7 @@ const EmailAction = ({
         position={Position.Left}
         isConnectable={isConnectable}
       />
-      <div>{data.metadata.kind}</div>
+      <div>{data.kind}</div>
     </div>
   );
 };

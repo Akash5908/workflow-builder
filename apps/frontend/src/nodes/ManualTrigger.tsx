@@ -1,9 +1,9 @@
+import { Button } from "@/components/ui/button";
 import { Position, Handle } from "@xyflow/react";
+import { MousePointer, MousePointerClick } from "lucide-react";
 
 interface ClickType {
-  metadata: {
-    kind: string;
-  };
+  kind: string;
 }
 
 const ManualTrigger = ({
@@ -13,6 +13,7 @@ const ManualTrigger = ({
   data: ClickType;
   isConnectable: boolean;
 }) => {
+  console.log(data);
   return (
     <div className="p-[3px] rounded-sm border-1 ">
       <Handle
@@ -20,7 +21,11 @@ const ManualTrigger = ({
         position={Position.Right}
         isConnectable={isConnectable}
       />
-      <div>{data.metadata.kind}</div>
+      <div>
+        <Button className="active:bg-slate-700">
+          Click <MousePointerClick />
+        </Button>
+      </div>
     </div>
   );
 };
