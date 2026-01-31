@@ -43,12 +43,14 @@ export function EmailCred() {
       const res = await axios.post(
         `${config.serverApiUrl}/credential`,
         {
-          name: "Email",
-          type: "SMTP",
-          port: Number(formData.port),
-          host: formData.host,
-          user: formData.user,
-          pass: formData.pass,
+          credential: {
+            name: "Email",
+            type: "SMTP",
+            port: Number(formData.port),
+            host: formData.host,
+            user: formData.user,
+            pass: formData.pass,
+          },
         },
         {
           headers: {

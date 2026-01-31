@@ -1,27 +1,11 @@
-import { Spinner } from "@/components/ui/spinner";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  ChevronLeft,
-  Save,
-  Play,
-  Download,
-  Maximize2,
-  Settings,
-  Copy,
-} from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import WorkflowEditor from "@/components/workflow/workflowEditor";
 import config from "@/config";
 import { ReactFlowProvider } from "@xyflow/react";
-import axios from "axios";
+import axios, { AxiosError, isAxiosError } from "axios";
 import type { WorkflowProp } from "common/types";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -56,9 +40,11 @@ const WorkflowDetail = () => {
         } else {
           setError("Workflow not found");
         }
-      } catch (err: any) {
-        console.error(err);
-        setError(err.response?.data?.error || "Failed to load workflow");
+      } catch (error: unknown) {
+        if (isAxiosError(error)) {
+          const err = error as AxiosError<{ error: string }>;
+          setError(err.response?.data?.error || "Failed to load workflow");
+        }
       } finally {
         setLoading(false);
       }
@@ -66,12 +52,6 @@ const WorkflowDetail = () => {
 
     fetchWorkflow();
   }, [id]);
-
-  const copyWorkflowId = () => {
-    if (workflow?._id) {
-      navigator.clipboard.writeText(workflow._id);
-    }
-  };
 
   if (loading) {
     return (

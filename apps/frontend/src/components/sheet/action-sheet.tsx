@@ -49,12 +49,14 @@ export const ActionSheet = ({
   const [metaData, setMetaData] = useState({
     email: "",
     message: "",
+    subject: "",
+    chatID: "",
   });
 
   function handleClose() {
     setToggleSheet(false);
     setSelectedAction(undefined);
-    setMetaData({ email: "", message: "" });
+    setMetaData({ email: "", message: "", subject: "", chatID: "" });
   }
 
   function handleSelect(value: string) {
@@ -65,14 +67,18 @@ export const ActionSheet = ({
       data: {
         kind: data.title,
         type: "target",
-        email: metaData.email,
-        message: metaData.message,
+        metadata: {
+          email: metaData.email,
+          message: metaData.message,
+          subject: metaData.subject,
+        },
       },
     });
   }
 
   function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setMetaData((prev) => ({ ...prev, email: e.target.value }));
+    const newEmail = e.target.value;
+    setMetaData((prev) => ({ ...prev, email: newEmail }));
   }
 
   function handleMessageChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -82,11 +88,79 @@ export const ActionSheet = ({
       ...prev,
       message: newMessage,
     }));
+
+    setSelectedAction((prev) => {
+      if (!prev) return;
+      return {
+        ...prev,
+        ...metaData,
+        message: newMessage,
+      };
+    });
   }
+
+  function handleSubjectChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const newSubject = e.target.value;
+
+    setMetaData((prev) => ({
+      ...prev,
+      subject: newSubject,
+    }));
+
+    setSelectedAction((prev) => {
+      if (!prev) return;
+      return {
+        ...prev,
+        ...metaData,
+        subject: newSubject,
+      };
+    });
+  }
+
+  function handleChatIDChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const newChatID = e.target.value;
+
+    setMetaData((prev) => ({
+      ...prev,
+      chatID: newChatID,
+    }));
+
+    setSelectedAction((prev) => {
+      if (!prev) return;
+      return {
+        ...prev,
+        ...metaData,
+        subject: newChatID,
+      };
+    });
+  }
+
+  const typeMetadata = (type: string) => {
+    if (type === "Email") {
+      return {
+        email: metaData.email,
+        subject: metaData.subject,
+        message: metaData.message,
+      };
+    } else if (type === "Telegram") {
+      return {
+        chatID: metaData.chatID,
+        message: metaData.message,
+      };
+    }
+  };
 
   function handleSubmit() {
     if (selectedAction) {
-      (onSelect(selectedAction), handleClose());
+      onSelect({
+        id: selectedAction.id,
+        data: {
+          type: selectedAction.data.type,
+          kind: selectedAction.data.kind,
+          metadata: typeMetadata(selectedAction.data.kind),
+        },
+      });
+      handleClose();
     }
   }
 
@@ -123,7 +197,7 @@ export const ActionSheet = ({
   const isFormValid =
     selectedAction &&
     (selectedAction.data.kind !== "Email" ||
-      (metaData.email && metaData.message));
+      (metaData.email && metaData.message && metaData.subject));
 
   return (
     <Sheet open={toggleSheet} onOpenChange={setToggleSheet}>
@@ -185,7 +259,6 @@ export const ActionSheet = ({
               </SelectContent>
             </Select>
           </div>
-
           {/* Configuration Form */}
           {selectedAction?.data.kind === "Email" && (
             <motion.div
@@ -210,6 +283,18 @@ export const ActionSheet = ({
                         placeholder="user@example.com"
                         value={metaData.email}
                         onChange={handleEmailChange}
+                        className="h-12 rounded-xl border-orange-200 focus:border-orange-500 focus:ring-orange-200 shadow-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-slate-700 mb-2 block">
+                        Subject
+                      </label>
+                      <Input
+                        type="text"
+                        placeholder="Enter your subject..."
+                        value={metaData.subject}
+                        onChange={handleSubjectChange}
                         className="h-12 rounded-xl border-orange-200 focus:border-orange-500 focus:ring-orange-200 shadow-sm"
                       />
                     </div>
@@ -243,8 +328,63 @@ export const ActionSheet = ({
               </Card>
             </motion.div>
           )}
+          {selectedAction?.data.kind === "Telegram" && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              className="space-y-4"
+            >
+              <Card className="border-2 border-orange-100 bg-gradient-to-r from-orange-50 to-orange-25 shadow-sm">
+                <CardContent className="p-6">
+                  <h3 className="font-semibold text-lg text-orange-900 mb-4 flex items-center gap-2">
+                    <Mail className="h-5 w-5" />
+                    Telegram Configuration
+                  </h3>
 
-          {/* Action Preview */}
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium text-slate-700 mb-2 block">
+                        Chat ID
+                      </label>
+                      <Input
+                        type="chatID"
+                        placeholder="user@example.com"
+                        value={metaData.chatID}
+                        onChange={handleChatIDChange}
+                        className="h-12 rounded-xl border-orange-200 focus:border-orange-500 focus:ring-orange-200 shadow-sm"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium text-slate-700 mb-2 block">
+                        Message Content
+                      </label>
+                      <Input
+                        type="text"
+                        placeholder="Enter your message..."
+                        value={metaData.message}
+                        onChange={handleMessageChange}
+                        className="h-12 rounded-xl border-orange-200 focus:border-orange-500 focus:ring-orange-200 shadow-sm"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-2">
+                      <Badge className="bg-orange-100 text-orange-800 border-orange-200 text-xs">
+                        Sends to: {metaData.chatID || "No chatBot selected"}
+                      </Badge>
+                      <Badge
+                        variant="outline"
+                        className="text-xs border-slate-300"
+                      >
+                        Message: {metaData.message.length || 0}/500 chars
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+          {/* Action Preview
           {selectedAction && !selectedAction.data.kind?.includes("Email") && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -275,7 +415,7 @@ export const ActionSheet = ({
                 </div>
               </div>
             </motion.div>
-          )}
+          )} */}
         </div>
 
         {/* Footer */}

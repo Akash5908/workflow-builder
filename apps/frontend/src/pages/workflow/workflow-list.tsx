@@ -22,11 +22,14 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDate } from "@/lib/formatDate";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 const Workflow = () => {
   const workflows = useWorkflow();
   const navigate = useNavigate();
 
+  // Check if the user is logged in
+  useAuthGuard("/login", false);
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
   };

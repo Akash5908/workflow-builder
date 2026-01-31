@@ -1,6 +1,6 @@
 export const SUPPORTED_TRIGGERS = [
   { id: "1", title: "Manual", description: "Manually triggers the workflow." },
-  { id: "2", title: "Webbook", description: "When the webhook is triggered" },
+  { id: "2", title: "Webhook", description: "When the webhook is triggered" },
 ];
 
 export const SUPPORTED_ACTIONS = [
@@ -19,12 +19,13 @@ export interface WorkflowProp {
   userId: string;
   nodes: NodeType[];
   edges: EdgeType[];
+  executed?: boolean;
   createdAt: string;
 }
 
 export interface ActionProp {
   id: string;
-  data: any;
+  data: { kind: string; type: string; metadata: any };
 }
 
 export interface NodeType {
@@ -33,7 +34,7 @@ export interface NodeType {
     x: number;
     y: number;
   };
-  data: any;
+  data: { kind: string; type: string; value: string; metadata: any };
   type: string;
 }
 

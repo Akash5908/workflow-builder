@@ -1,8 +1,10 @@
 import mongoose, { Schema, Types } from "mongoose";
+import { boolean } from "zod";
 
 const nodeSchema = new Schema(
   {
     id: { type: String },
+    workflowId: { type: String },
     position: {
       x: Number,
       y: Number,
@@ -18,6 +20,8 @@ const edgeSchema = new Schema(
     id: {
       type: String,
     },
+    style: { type: Schema.Types.Mixed, default: {} },
+    markerEnd: { type: Schema.Types.Mixed, default: {} },
     source: String,
     target: String,
   },
@@ -43,6 +47,10 @@ const workflowSchema = new Schema({
   edges: {
     type: [edgeSchema],
     default: [],
+  },
+  executed: {
+    type: Boolean,
+    default: false,
   },
   createdAt: {
     type: Date,

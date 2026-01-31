@@ -7,9 +7,9 @@ import {
   addEdge,
   useReactFlow,
   Background,
-  Controls,
   MiniMap,
   MarkerType,
+  BackgroundVariant,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import {
@@ -28,31 +28,34 @@ import {
   Plus,
   Save,
   Trash2,
-  Maximize2,
   PanelLeft,
   PanelRight,
-  Play,
-  FlaskConicalOff,
   FlaskConical,
 } from "lucide-react";
 import { Spinner } from "../ui/spinner";
 import { SaveWorkflow } from "@/hooks/useSaveWorkflow";
 import { motion } from "framer-motion";
+import { ExecuteWorkflow } from "@/hooks/useExecuteWorkflow";
+import WebhookTrigger from "@/nodes/WebhookTrigger";
 
 const WorkflowEditor = ({ workflow }: { workflow: WorkflowProp }) => {
   useAuthGuard("/login", false);
-  const { screenToFlowPosition, fitView } = useReactFlow();
+  const [workflowData, setWorkflowData] = useState(workflow);
+  const { screenToFlowPosition } = useReactFlow();
   const { saveWorkflow } = SaveWorkflow();
+  const { executeWorkflow } = ExecuteWorkflow(workflow._id);
 
   const [saving, setSaving] = useState(false);
+  const [executing, setExecuting] = useState(false);
   const [nodes, setNodes] = useState<NodeType[]>(workflow.nodes);
   const [edges, setEdges] = useState<EdgeType[]>(workflow.edges);
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   const nodeTypes = {
     Manual: ManualTrigger,
     Email: EmailAction,
     Telegram: TelegramAction,
+    Webhook: WebhookTrigger,
   };
 
   const [toggleSheet, setToggleSheet] = useState(false);
@@ -103,12 +106,15 @@ const WorkflowEditor = ({ workflow }: { workflow: WorkflowProp }) => {
     const newNodeId = item.id;
     const newNode = {
       id: newNodeId,
+      workflowId: workflow._id,
       position: { x: nodeData.xCordinate, y: nodeData.yCordinate },
-      data: item.data,
+      data: { ...item.data, workflowId: workflow._id },
       type: item.data.kind as keyof typeof nodeTypes,
       isConnectable: true,
     };
-
+    if (item.data.type === "trigger") {
+      setNodes((prev) => prev.filter((n) => n.data.type !== "trigger"));
+    }
     setNodes((nds) => [...nds, newNode]);
 
     if (nodeData.fromNodeId && item.data.type === "target") {
@@ -118,9 +124,9 @@ const WorkflowEditor = ({ workflow }: { workflow: WorkflowProp }) => {
           id: `${nodeData.fromNodeId}-${newNodeId}`,
           source: nodeData.fromNodeId,
           style: {
-            stroke: "#3b82f6", // Blue line
-            strokeWidth: 1, // Thicker
-            strokeDasharray: "10,5", // Dashed pattern
+            stroke: "#3b82f6",
+            strokeWidth: 1,
+            strokeDasharray: "10,5",
             strokeLinecap: "round",
           },
           markerEnd: {
@@ -150,6 +156,19 @@ const WorkflowEditor = ({ workflow }: { workflow: WorkflowProp }) => {
       });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleExecute = async () => {
+    setExecuting(true);
+    try {
+      await executeWorkflow(); // func to execute workflow
+      setWorkflowData((prev) => ({
+        ...prev,
+        executed: true,
+      }));
+    } finally {
+      setExecuting(false);
     }
   };
 
@@ -199,11 +218,25 @@ const WorkflowEditor = ({ workflow }: { workflow: WorkflowProp }) => {
           </Button>
         </div>
       </div>
+
       {/* Execute workflow Button */}
-      <Button className="bg-orange-500 fixed top-[90vh] left-[50vw] z-50  hover:bg-orange-600 shadow-lg h-12 px-6 gap-2">
-        <FlaskConical className="h-5 w-5" />
-        Execute Workflow
-      </Button>
+      {!workflowData.executed && (
+        <Button
+          className="bg-orange-500 fixed top-[90vh] left-[50vw] z-50  hover:bg-orange-600 shadow-lg h-12 px-6 gap-2"
+          onClick={handleExecute}
+        >
+          <FlaskConical className="h-5 w-5" />
+          {executing ? (
+            <div className="flex justify-center items-center">
+              {" "}
+              Executing <Spinner />
+            </div>
+          ) : (
+            "Execute Workflow"
+          )}
+        </Button>
+      )}
+
       {/* Sidebar */}
       {showSidebar && (
         <div className="absolute left-4 top-20 z-40 w-72 h-[calc(100vh-8rem)] bg-white/5 backdrop-blur-md border border-white/10 shadow-2xl rounded-2xl overflow-hidden">
@@ -280,8 +313,15 @@ const WorkflowEditor = ({ workflow }: { workflow: WorkflowProp }) => {
         onConnectEnd={onConnectionEnd}
         nodeTypes={nodeTypes}
         fitView
+        nodesDraggable={true}
+        elementsSelectable={workflowData.executed}
       >
-        <Background variant="dots" gap={20} size={1} color="#ffffff30" />
+        <Background
+          variant={BackgroundVariant.Dots}
+          gap={20}
+          size={1}
+          color="#ffffff30"
+        />
 
         <MiniMap
           className="!backdrop-blur-md !bg-white/5 !border-white/1s0 !rounded-xl !shadow-xl"

@@ -19,20 +19,19 @@ import config from "@/config";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface TelegramCred {
   token: string;
-  chatId: string;
 }
 
 export function TelegramCred() {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<TelegramCred>({
-    chatId: "",
     token: "",
   });
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   // Fixed: Actually send the form data!
   const createCredential = async () => {
     setLoading(true);
@@ -40,10 +39,11 @@ export function TelegramCred() {
       const res = await axios.post(
         `${config.serverApiUrl}/credential`,
         {
-          name: "Telegram",
-          type: "telegram",
-          token: formData.token,
-          chatId: formData.chatId,
+          credential: {
+            name: "Telegram",
+            type: "TELEGRAM",
+            botToken: formData.token,
+          },
         },
         {
           headers: {
@@ -55,7 +55,8 @@ export function TelegramCred() {
       if (res.status === 200) {
         toast.success("Telegram credential created successfully!");
         setOpen(false);
-        setFormData({ token: "", chatId: "" });
+        setFormData({ token: "" });
+        navigate("/credentials", { replace: true });
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -105,23 +106,6 @@ export function TelegramCred() {
         {/* Form */}
         <div className="p-8 space-y-6">
           <div className="space-y-4">
-            {/* Chat ID */}
-            <div className="space-y-2">
-              <Label className="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                <Hash className="h-4 w-4" />
-                Chat ID
-              </Label>
-              <Input
-                placeholder="-1001234567890"
-                value={formData.chatId}
-                onChange={handleInputChange("chatId")}
-                className="h-12 bg-slate-800/50 border-slate-700 hover:border-slate-600 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl text-slate-200 placeholder-slate-500"
-              />
-              <p className="text-xs text-slate-500 mt-1">
-                Use @userinfobot or /getUpdates
-              </p>
-            </div>
-
             {/* Token */}
             <div className="space-y-2">
               <Label className="text-sm font-semibold text-slate-300 flex items-center gap-2">
@@ -154,7 +138,7 @@ export function TelegramCred() {
           </DialogClose>
           <Button
             onClick={createCredential}
-            disabled={loading || !formData.chatId || !formData.token}
+            disabled={loading || !formData.token}
             className="h-12 px-8 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-xl border-blue-600 text-white font-semibold rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
           >
             {loading ? (

@@ -15,13 +15,24 @@ import { motion } from "framer-motion";
 import config from "@/config";
 import { EmailCred } from "./type/emailCred";
 import { TelegramCred } from "./type/telegramCred";
+import { useState } from "react";
 
-export function CreateCredential() {
+export function CreateCredential({
+  toggle,
+  setToggle,
+}: {
+  toggle: boolean;
+  setToggle: () => void;
+}) {
+  console.log(toggle);
   return (
-    <Dialog>
+    <Dialog open={toggle}>
       <DialogTrigger asChild>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
-          <Button className="group relative h-14 px-8 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 shadow-xl border-emerald-600 text-white font-semibold rounded-2xl transition-all duration-300 hover:shadow-2xl">
+          <Button
+            className="group relative h-14 px-8 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 shadow-xl border-emerald-600 text-white font-semibold rounded-2xl transition-all duration-300 hover:shadow-2xl"
+            onClick={setToggle}
+          >
             <Plus className="h-5 w-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
             Create Credential
             <div className="absolute inset-0 bg-white/10 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -67,14 +78,13 @@ export function CreateCredential() {
 
         {/* Footer */}
         <div className="p-6 pt-0 border-t border-slate-800 bg-slate-900/50 backdrop-blur-sm rounded-b-2xl flex justify-center">
-          <DialogClose asChild>
-            <Button
-              variant="outline"
-              className="mt-6 h-12 px-8 border-slate-600 text-slate-700 hover:bg-slate-800 hover:border-slate-500 hover:text-slate-200 shadow-lg backdrop-blur-sm transition-all duration-200"
-            >
-              Cancel
-            </Button>
-          </DialogClose>
+          <Button
+            variant="outline"
+            className="mt-6 h-12 px-8 border-slate-600 text-slate-700 hover:bg-slate-800 hover:border-slate-500 hover:text-slate-200 shadow-lg backdrop-blur-sm transition-all duration-200"
+            onClick={setToggle}
+          >
+            Cancel
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

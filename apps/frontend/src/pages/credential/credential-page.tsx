@@ -10,20 +10,18 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import {
-  BadgeCheck,
-  Key,
-  Calendar,
-  Trash2,
-  Plus,
-  ChevronRight,
-} from "lucide-react";
+import { BadgeCheck, Key, Calendar, Trash2, ChevronRight } from "lucide-react";
 import { useCredential } from "@/hooks/useCredential";
 import { motion } from "framer-motion";
-import React from "react";
+import { ViewCredComponent } from "@/components/credential/viewCredComponent";
+import { useState } from "react";
 
 const CredentialPage = () => {
+  const [toggle, setToggle] = useState(false);
   const { creds } = useCredential();
+  const handleToggle = () => {
+    setToggle((prev: boolean) => !prev);
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -57,7 +55,7 @@ const CredentialPage = () => {
               </p>
             </div>
           </div>
-          <CreateCredential />
+          <CreateCredential toggle={toggle} setToggle={handleToggle} />
         </div>
       </motion.div>
 
@@ -77,8 +75,8 @@ const CredentialPage = () => {
                   {creds?.length || 0} Credentials
                 </h2>
                 <p className="text-sm text-slate-500">
-                  {creds?.length > 0
-                    ? `${creds.length} credential${creds.length !== 1 ? "s" : ""} found`
+                  {creds !== undefined && creds.length > 0
+                    ? `${creds?.length} credential${creds?.length !== 1 ? "s" : ""} found`
                     : "No credentials created yet"}
                 </p>
               </div>
@@ -104,17 +102,12 @@ const CredentialPage = () => {
                   </TableRow>
                 </TableHeader>
                 {creds !== null && creds !== undefined && creds.length > 0 ? (
-                  creds.map((c, index) => (
-                    <motion.div
-                      key={c._id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                    >
-                      <TableRow className="hover:bg-slate-700/50 border-b border-slate-700/50 transition-all duration-200 group h-16 data-[state=selected]:bg-slate-700">
+                  creds.map((c) => (
+                    <TableBody>
+                      <TableRow className="hover:bg-slate-700/50 w-full border-b border-slate-700/50 transition-all duration-200 group h-16 data-[state=selected]:bg-slate-700">
                         {/* Name */}
-                        <TableCell className="font-semibold text-slate-200 group-hover:text-white pr-4">
-                          <div className="flex items-center gap-3">
+                        <TableCell className="font-semibold text-slate-200 group-hover:text-white pr-4 w-[200px]">
+                          <div className="flex items-center gap-3 w-full">
                             <div className="p-2 bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-xl border border-blue-500/30">
                               <Key className="h-4 w-4 text-blue-400" />
                             </div>
@@ -146,14 +139,8 @@ const CredentialPage = () => {
                         {/* Actions */}
                         <TableCell className="text-right py-4 pr-6">
                           <div className="flex items-center gap-2 justify-end">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-9 px-4 border-slate-600 text-slate-300 hover:bg-slate-700 hover:border-slate-500 hover:text-white backdrop-blur-sm shadow-lg"
-                            >
-                              <ChevronRight className="h-4 w-4 mr-1" />
-                              View
-                            </Button>
+                            <ViewCredComponent credData={c} />
+
                             <Button
                               size="sm"
                               variant="destructive"
@@ -165,7 +152,7 @@ const CredentialPage = () => {
                           </div>
                         </TableCell>
                       </TableRow>
-                    </motion.div>
+                    </TableBody>
                   ))
                 ) : (
                   <TableRow>

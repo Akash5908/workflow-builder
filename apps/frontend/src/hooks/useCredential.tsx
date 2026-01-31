@@ -6,7 +6,7 @@ interface CredsProp {
   _id: string;
   name: string;
   type: string;
-  createdAt: Date;
+  createdAt: string;
 }
 
 export const useCredential = () => {

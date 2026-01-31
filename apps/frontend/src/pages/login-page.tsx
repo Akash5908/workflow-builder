@@ -29,7 +29,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useAuthGuard("/workflow", true);
+  useAuthGuard("/workflows", true);
 
   const handleLogin = async () => {
     setLoading(true);
@@ -41,7 +41,7 @@ const Login = () => {
       if (res.status === 200) {
         localStorage.setItem("access-token", res.data.token);
         toast.success("Successfully signed in!");
-        navigate("/workflow", { replace: true });
+        navigate("/workflows", { replace: true });
       }
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

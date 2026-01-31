@@ -6,7 +6,7 @@ import { verifyToken } from "../../middleware/verify-token";
 
 const router: express.Router = express.Router();
 
-router.post("/workflow", verifyToken, async (req, res) => {
+router.post("/workflow", async (req, res) => {
   const user = req.user!;
   const { success, data } = workflowValidator.safeParse(req.body);
   if (!success) {
@@ -16,7 +16,6 @@ router.post("/workflow", verifyToken, async (req, res) => {
     });
   }
   try {
-    console.log(data, user);
     const workflow = await WorkflowModel.create({
       userId: user.userId,
       workflowName: data.workflowName,
@@ -34,7 +33,7 @@ router.post("/workflow", verifyToken, async (req, res) => {
   }
 });
 
-router.put("/workflow/:id", verifyToken, async (req, res) => {
+router.put("/workflow/:id", async (req, res) => {
   const userId = req.user?.userId;
   const workflowId = req.params.id;
   try {
@@ -59,7 +58,7 @@ router.put("/workflow/:id", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/workflow", verifyToken, async (req, res) => {
+router.get("/workflow", async (req, res) => {
   const userId = req.user?.userId;
   try {
     const workflow = await WorkflowModel.find({ userId: userId as string });
@@ -75,7 +74,7 @@ router.get("/workflow", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/workflow/:id", verifyToken, async (req, res) => {
+router.get("/workflow/:id", async (req, res) => {
   const userId = req.user?.userId;
   const workflowId = req.params.id;
   try {
@@ -91,6 +90,35 @@ router.get("/workflow/:id", verifyToken, async (req, res) => {
     res.status(403).json({
       success: false,
       error: "No workflow found with this Id.",
+    });
+  }
+});
+
+router.put("/workflow/execute/:id", async (req, res) => {
+  const workflowId = req.params.id;
+  const userId = req.user?.userId;
+
+  try {
+    const workflow = await WorkflowModel.findOne({
+      _id: workflowId,
+      userId: userId as string,
+    });
+    if (workflow === null) {
+      return res.status(404).json({
+        success: false,
+        error: "Workflow not found!",
+      });
+    }
+    workflow.executed = true;
+    workflow?.save();
+    return res.status(200).json({
+      sucess: true,
+      message: "Workflow successfully executed.",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: "Internal server error, cannot execute the workflow.!",
     });
   }
 });

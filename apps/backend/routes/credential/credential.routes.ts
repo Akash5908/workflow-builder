@@ -3,10 +3,10 @@ import { verifyToken } from "../../middleware/verify-token";
 import { credentialValidator } from "../../validator/credential/credential.validator";
 import { CredentialModel } from "../../models/credential/credential.model";
 
-const router = express.Router();
+const router: express.Router = express.Router();
 
-router.post("credential", verifyToken, async (req, res) => {
-  const { name, type } = req.body;
+router.post("/credential", async (req, res) => {
+  const { name, type } = req.body.credential;
   const { success, data } = credentialValidator.safeParse({
     name,
     type,
@@ -17,10 +17,11 @@ router.post("credential", verifyToken, async (req, res) => {
       error: "Invalid Schema",
     });
   }
-  const existingCred = await CredentialModel.find({
+  const existingCred = await CredentialModel.findOne({
     userId: req.user?.userId!,
     name: data.name,
   });
+
   if (existingCred) {
     return res.status(403).json({
       success: false,
@@ -28,12 +29,16 @@ router.post("credential", verifyToken, async (req, res) => {
     });
   }
   try {
-    const credential = await CredentialModel.create(req.body.credential);
+    const credential = await CredentialModel.create({
+      ...req.body.credential,
+      userId: req.user?.userId!,
+    });
     return res.status(200).json({
       success: true,
       credential: credential,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       success: false,
       error: "Internal server error",
@@ -42,7 +47,7 @@ router.post("credential", verifyToken, async (req, res) => {
 });
 
 // get all creds
-router.get("/credential", verifyToken, async (req, res) => {
+router.get("/credential", async (req, res) => {
   try {
     const creds = await CredentialModel.find({ userId: req.user?.userId! });
     return res.status(200).json({
@@ -56,3 +61,5 @@ router.get("/credential", verifyToken, async (req, res) => {
     });
   }
 });
+
+export { router as CredentialRouter };
