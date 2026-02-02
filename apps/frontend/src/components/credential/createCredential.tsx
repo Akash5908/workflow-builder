@@ -1,21 +1,16 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Mail, MessageCircle, Key, Shield, Zap, Plus } from "lucide-react";
+
+import { Key, Plus } from "lucide-react";
 import { motion } from "framer-motion";
-import config from "@/config";
 import { EmailCred } from "./type/emailCred";
 import { TelegramCred } from "./type/telegramCred";
-import { useState } from "react";
 
 export function CreateCredential({
   toggle,

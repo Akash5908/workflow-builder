@@ -19,7 +19,7 @@ const WebhookTrigger = ({
   isConnectable,
 }: {
   id: string;
-  data: Data;
+  Data;
   isConnectable: boolean;
 }) => {
   const [copy, setCopy] = useState(false);
@@ -37,81 +37,77 @@ const WebhookTrigger = ({
       initial={{ scale: 0.95, opacity: 0.8 }}
       animate={{ scale: 1, opacity: 1 }}
       className="group relative bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 
-                 backdrop-blur-md border border-emerald-500/40 shadow-xl rounded-xl p-4 
-                 w-[240px] hover:shadow-emerald/25 hover:border-emerald-400/60 
+                 backdrop-blur-md border border-emerald-500/40 shadow-lg rounded-lg p-3 
+                 w-[160px] hover:shadow-emerald/25 hover:border-emerald-400/60 
                  transition-all duration-300 hover:-translate-y-0.5"
-      style={{ minHeight: 120 }}
+      style={{ minHeight: 96 }}
     >
       {/* Animated gradient overlay */}
       <div
         className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 via-transparent 
-                      to-cyan-500/5 rounded-xl opacity-0 group-hover:opacity-100 
+                      to-cyan-500/5 rounded-lg opacity-0 group-hover:opacity-100 
                       transition-opacity duration-500"
       />
 
-      {/* Output handle - enhanced */}
+      {/* Output handle */}
       <Handle
         type="source"
         position={Position.Right}
-        className="!w-3 !h-3 bg-emerald-500 hover:bg-emerald-400 
-                   border-2 border-white/30 rounded-sm ring-2 ring-emerald-500/40 
+        className="!w-2.5 !h-2.5 bg-emerald-500 hover:bg-emerald-400 
+                   border-2 border-white/30 rounded-sm ring-1 ring-emerald-500/40 
                    shadow-md hover:shadow-lg transition-all"
         isConnectable={isConnectable}
       />
 
-      {/* Header with icon */}
-      <div className="flex items-start space-x-3 mb-3">
+      {/* Header - Compact */}
+      <div className="flex items-start space-x-2 mb-2">
         <motion.div
           animate={{ rotate: copy ? 360 : 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="flex-shrink-0 p-2.5 bg-emerald-500/20 rounded-xl border border-emerald-400/40 
-                     backdrop-blur-sm shadow-lg"
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="flex-shrink-0 p-1.5 bg-emerald-500/20 rounded-lg border border-emerald-400/40 
+                     backdrop-blur-sm shadow-md"
         >
-          <Zap className="w-5 h-5 text-emerald-400 drop-shadow-sm" />
+          <Zap className="w-3 h-3 text-emerald-400" />
         </motion.div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-white text-sm leading-tight tracking-tight mb-0.5">
-            Webhook Trigger
+          <h3 className="font-semibold text-white text-xs leading-tight tracking-tight mb-0.5">
+            Webhook
           </h3>
-          <Badge className="text-xs bg-emerald-500/20 text-emerald-100 border-emerald-400/30 h-5">
+          <Badge className="text-[9px] bg-emerald-500/20 text-emerald-100 border-emerald-400/30 h-4 px-1.5">
             Instant
           </Badge>
         </div>
       </div>
 
-      {/* URL preview & copy */}
-      <div className="space-y-2">
+      {/* URL preview & copy - Compact */}
+      <div className="space-y-1.5">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-slate-300 flex items-center gap-1.5">
-            <Globe className="w-3.5 h-3.5 text-slate-400" />
+          <span className="text-[10px] font-medium text-slate-300 flex items-center gap-1">
+            <Globe className="w-3 h-3 text-slate-400" />
             Endpoint
           </span>
-          {/* <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}> */}
           <div
-            // size="sm"
-            // variant="ghost"
-            className="h-7 w-7 p-0 bg-white/10 hover:bg-white/20 flex justify-center items-center 
-                       border-white/20 text-slate-300 hover:text-emerald-300 
-                       shadow-md hover:shadow-emerald/20 rounded-lg transition-all z-40"
+            className=" flex justify-center items-center h-6 w-6 p-0 bg-white/10 hover:bg-white/20 border-white/20 
+                     text-slate-300 hover:text-emerald-300 shadow-md hover:shadow-emerald/20 
+                     rounded-md transition-all text-xs z-30"
           >
             {copy ? (
-              <CopyCheck className="w-3.5 h-3.5" />
+              <CopyCheck className="w-3 h-3" />
             ) : (
-              <Copy className="w-3.5 h-3.5 z-50 " onClick={handleCopyUrl} />
+              <Copy className="w-3 h-3" onClick={handleCopyUrl} />
             )}
           </div>
-          {/* </motion.div> */}
         </div>
 
         {/* Truncated URL preview */}
         <div
           className="bg-slate-800/60 hover:bg-slate-800/80 border border-slate-700/50 
-                       rounded-lg px-3 py-2 backdrop-blur-sm shadow-inner transition-colors
-                       group-hover:border-emerald-500/40"
+                       rounded-md px-2 py-1.5 backdrop-blur-sm shadow-inner transition-colors
+                       group-hover:border-emerald-500/40 text-[10px]"
         >
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-300 truncate">
-            <Link2 className="w-3 h-3 flex-shrink-0 text-slate-500" />
+          <div className="flex items-center gap-1 text-xs font-mono text-slate-300 truncate">
+            <Link2 className="w-2.5 h-2.5 flex-shrink-0 text-slate-500" />
             <span className="truncate">
               /webhook/{data.workflowId.slice(-8)}
             </span>
@@ -120,8 +116,8 @@ const WebhookTrigger = ({
       </div>
 
       {/* Status footer */}
-      <div className="absolute bottom-2 right-2 text-xs text-emerald-400 font-medium flex items-center gap-1">
-        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+      <div className="absolute bottom-1.5 right-1.5 text-[10px] text-emerald-400 font-medium flex items-center gap-0.5">
+        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
         Ready
       </div>
     </motion.div>

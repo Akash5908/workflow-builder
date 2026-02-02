@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "pnpm tsc -b && node --env-file=.env ./dist/index.js"
+    "dev": "pnpm tsc -b && node --env-file=.env ./dist/index.js",
+    "satrt": "node --env-file=.env ./dist/index.js"
   },
   "keywords": [],
   "author": "",
