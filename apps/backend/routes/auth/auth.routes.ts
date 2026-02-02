@@ -34,6 +34,7 @@ router.post("/login", async (req, res) => {
       { userId: user?._id, userName: user?.username },
       config.jwtSecret,
     );
+    console.log("login", token);
     return res.status(200).json({
       success: true,
       token,
