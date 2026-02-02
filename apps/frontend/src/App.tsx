@@ -12,7 +12,7 @@ const App = () => {
   return (
     <>
       <Toaster />
-      <BrowserRouter>
+      <BrowserRouter basename="/">
         <NavbarSection />
         <Routes>
           <Route index element={<HomePage />} />
