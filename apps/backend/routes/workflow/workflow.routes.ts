@@ -6,7 +6,7 @@ import { verifyToken } from "../../middleware/verify-token";
 
 const router: express.Router = express.Router();
 
-router.post("/workflow", async (req, res) => {
+router.post("/workflow", verifyToken, async (req, res) => {
   const user = req.user!;
   const { success, data } = workflowValidator.safeParse(req.body);
   if (!success) {
@@ -33,7 +33,7 @@ router.post("/workflow", async (req, res) => {
   }
 });
 
-router.put("/workflow/:id", async (req, res) => {
+router.put("/workflow/:id", verifyToken, async (req, res) => {
   const userId = req.user?.userId;
   const workflowId = req.params.id;
   try {
@@ -58,7 +58,7 @@ router.put("/workflow/:id", async (req, res) => {
   }
 });
 
-router.get("/workflow", async (req, res) => {
+router.get("/workflow", verifyToken, async (req, res) => {
   const userId = req.user?.userId;
   try {
     const workflow = await WorkflowModel.find({ userId: userId as string });
@@ -74,7 +74,7 @@ router.get("/workflow", async (req, res) => {
   }
 });
 
-router.get("/workflow/:id", async (req, res) => {
+router.get("/workflow/:id", verifyToken, async (req, res) => {
   const userId = req.user?.userId;
   const workflowId = req.params.id;
   try {
@@ -94,7 +94,7 @@ router.get("/workflow/:id", async (req, res) => {
   }
 });
 
-router.put("/workflow/execute/:id", async (req, res) => {
+router.put("/workflow/execute/:id", verifyToken, async (req, res) => {
   const workflowId = req.params.id;
   const userId = req.user?.userId;
 

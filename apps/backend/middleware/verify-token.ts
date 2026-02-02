@@ -12,7 +12,7 @@ export const verifyToken = (
   if (!token) {
     return res.status(403).json({
       success: false,
-      error: "Token is missing.",
+      error: "Token is gone.",
     });
   }
   try {

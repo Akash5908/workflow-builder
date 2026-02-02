@@ -5,7 +5,7 @@ import { CredentialModel } from "../../models/credential/credential.model";
 
 const router: express.Router = express.Router();
 
-router.post("/credential", async (req, res) => {
+router.post("/credential", verifyToken, async (req, res) => {
   const { name, type } = req.body.credential;
   const { success, data } = credentialValidator.safeParse({
     name,
@@ -47,7 +47,7 @@ router.post("/credential", async (req, res) => {
 });
 
 // get all creds
-router.get("/credential", async (req, res) => {
+router.get("/credential", verifyToken, async (req, res) => {
   try {
     const creds = await CredentialModel.find({ userId: req.user?.userId! });
     return res.status(200).json({
