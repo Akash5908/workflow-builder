@@ -1,11 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -16,7 +10,6 @@ import {
   Workflow,
   LogOut,
   LogIn,
-  User,
   UserLockIcon,
 } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
@@ -26,8 +19,15 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export function NavbarSection() {
-  const { profile, loading } = useProfile();
-  const { login, isLoggedIn, logout } = useAuthStore() as any;
+  const { profile } = useProfile();
+  const { login, isLoggedIn, logout } = useAuthStore() as {
+    login: (
+      userData: { _id: string; email: string; name: string },
+      isLoggedIn: boolean,
+    ) => void;
+    isLoggedIn: boolean;
+    logout: () => void;
+  };
   const navigate = useNavigate();
   const [toggleSheet, setToggleSheet] = useState(false);
 

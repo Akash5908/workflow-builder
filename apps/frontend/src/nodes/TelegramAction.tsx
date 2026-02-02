@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 // import {BadgePo}
-import { Spinner } from "@/components/ui/spinner";
+
 import { Telegram } from "@/hooks/useTelegram";
 import {
   Position,
@@ -51,8 +51,6 @@ const TelegramAction = ({
       setError(null);
       try {
         await sendMessage(data.metadata.chatID, data.metadata.message);
-      } catch (err) {
-        setError("Failed to send message");
       } finally {
         setSending(false);
       }
@@ -63,7 +61,7 @@ const TelegramAction = ({
     }
   }, [nodeData, data.metadata.chatID, data.metadata.message]);
 
-  const getStatusVariant = (): BadgeProps["variant"] => {
+  const getStatusVariant = () => {
     if (sending) return "default";
     if (error) return "destructive";
     return "outline";

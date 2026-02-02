@@ -83,7 +83,7 @@ const EmailAction = ({
     }
   }, [nodeData, data.metadata, id]);
 
-  const getStatusVariant = (): BadgeProps["variant"] => {
+  const getStatusVariant = () => {
     if (sendingMail) return "default";
     if (error) return "destructive";
     return "outline";

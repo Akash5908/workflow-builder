@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, Plus, WorkflowIcon, Clock, Copy } from "lucide-react";
+import { ChevronRight, WorkflowIcon, Clock, Copy } from "lucide-react";
 import { CreateWorkflow } from "@/components/workflow/workflowCreator";
 import { useWorkflow } from "@/hooks/useWorkflow";
 import { useNavigate } from "react-router-dom";
@@ -138,7 +138,7 @@ const Workflow = () => {
                 </TableHeader>
                 <TableBody>
                   {workflows.length > 0 ? (
-                    workflows.map((wf, index) => (
+                    workflows.map((wf) => (
                       <TableRow
                         key={wf._id}
                         className="hover:bg-slate-700/50 border-b border-slate-700/50 transition-all duration-200 group data-[state=selected]:bg-slate-700 h-14"

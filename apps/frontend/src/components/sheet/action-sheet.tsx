@@ -1,10 +1,8 @@
 import {
   Sheet,
-  SheetHeader,
   SheetTitle,
   SheetContent,
   SheetFooter,
-  SheetClose,
   SheetDescription,
 } from "@/components/ui/sheet";
 import { Button } from "../ui/button";
@@ -19,15 +17,8 @@ import {
 } from "@/components/ui/select";
 import { Input } from "../ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "lucide-react";
-import {
-  Mail,
-  MessageCircle,
-  Send,
-  Zap,
-  Download,
-  AlertTriangle,
-} from "lucide-react";
+import { Badge } from "../ui/badge";
+import { Mail, MessageCircle, Send, Zap, Download } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import {

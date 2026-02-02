@@ -1,22 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Position, Handle, useReactFlow } from "@xyflow/react";
-import { MousePointerClick, Play, Zap, Circle } from "lucide-react";
+import { MousePointerClick, Play, Circle } from "lucide-react";
 import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
 
-interface ClickType {
-  kind: string;
-  value: string;
-}
+// interface ClickType {
+//   kind: string;
+//   value: string;
+// }
 
 const ManualTrigger = ({
   id,
-  data,
   isConnectable,
 }: {
   id: string;
-  ClickType;
   isConnectable: boolean;
 }) => {
   const { updateNodeData } = useReactFlow();

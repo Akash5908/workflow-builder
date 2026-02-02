@@ -1,14 +1,7 @@
 import useAuthStore from "@/lib/useAuthStore";
-import React from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { LayoutGrid, Play, Zap, Workflow, Users, Settings } from "lucide-react";
+import { Card, CardContent, CardDescription } from "@/components/ui/card";
+import { LayoutGrid, Play, Zap, Workflow, Settings } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
@@ -109,10 +102,7 @@ const HomePage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card
-                  className="border-0 bg-slate-800/80 backdrop-blur-md hover:bg-slate-700/80 border-slate-700/50 shadow-xl hover:shadow-2xl transition-all duration-300 h-full group cursor-pointer"
-                  asChild
-                >
+                <Card className="border-0 bg-slate-800/80 backdrop-blur-md hover:bg-slate-700/80 border-slate-700/50 shadow-xl hover:shadow-2xl transition-all duration-300 h-full group cursor-pointer">
                   <Link to={href}>
                     <CardContent className="p-8 pt-10">
                       <div className="w-16 h-16 bg-slate-700/50 group-hover:bg-slate-600/50 rounded-2xl flex items-center justify-center mb-6 transition-all group-hover:scale-110">

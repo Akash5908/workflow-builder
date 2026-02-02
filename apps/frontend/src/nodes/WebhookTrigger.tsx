@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import config from "@/config";
 import { Position, Handle } from "@xyflow/react";
@@ -14,12 +13,11 @@ interface Data {
 }
 
 const WebhookTrigger = ({
-  id,
   data,
   isConnectable,
 }: {
   id: string;
-  Data;
+  data: Data;
   isConnectable: boolean;
 }) => {
   const [copy, setCopy] = useState(false);

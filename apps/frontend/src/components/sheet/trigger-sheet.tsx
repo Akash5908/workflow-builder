@@ -1,10 +1,8 @@
 import {
   Sheet,
-  SheetHeader,
   SheetTitle,
   SheetContent,
   SheetFooter,
-  SheetClose,
   SheetDescription,
 } from "@/components/ui/sheet";
 import { Button } from "../ui/button";

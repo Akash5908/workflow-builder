@@ -10,6 +10,13 @@ import {
   MiniMap,
   MarkerType,
   BackgroundVariant,
+  // type NodeChange,
+  // type Node,
+  // type EdgeChange,
+  type Connection,
+  type FinalConnectionState,
+  type NodeChange,
+  type EdgeChange,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import {
@@ -71,22 +78,24 @@ const WorkflowEditor = ({ workflow }: { workflow: WorkflowProp }) => {
   });
 
   const onNodesChange = useCallback(
-    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    (changes: NodeChange<NodeType>[]) =>
+      setNodes((nds: NodeType[]) => applyNodeChanges<NodeType>(changes, nds)),
     [],
   );
 
   const onEdgesChange = useCallback(
-    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    (changes: EdgeChange<EdgeType>[]) =>
+      setEdges((eds: EdgeType[]) => applyEdgeChanges(changes, eds)),
     [],
   );
 
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
+    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
     [],
   );
 
   const onConnectionEnd = useCallback(
-    (params, connectionInfo) => {
+    (_event: MouseEvent | TouchEvent, connectionInfo: FinalConnectionState) => {
       if (!connectionInfo.to) return;
       const dropPosition = screenToFlowPosition({
         x: connectionInfo.to.x,
@@ -95,7 +104,7 @@ const WorkflowEditor = ({ workflow }: { workflow: WorkflowProp }) => {
       setNodeData({
         xCordinate: dropPosition.x,
         yCordinate: dropPosition.y,
-        fromNodeId: connectionInfo.fromNode.id,
+        fromNodeId: connectionInfo.fromNode!.id,
       });
       setOpenAction(true);
     },

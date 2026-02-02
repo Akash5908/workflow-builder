@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { BadgeCheck, Key, Calendar, Trash2, ChevronRight } from "lucide-react";
+import { BadgeCheck, Key, Calendar, Trash2 } from "lucide-react";
 import { useCredential } from "@/hooks/useCredential";
 import { motion } from "framer-motion";
 import { ViewCredComponent } from "@/components/credential/viewCredComponent";
@@ -172,7 +172,10 @@ const CredentialPage = () => {
                             Add your first API key or token to get started.
                           </p>
                         </div>
-                        <CreateCredential />
+                        <CreateCredential
+                          toggle={toggle}
+                          setToggle={handleToggle}
+                        />
                       </div>
                     </TableCell>
                   </TableRow>
