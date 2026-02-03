@@ -14,7 +14,7 @@ app.use(express.json());
 const allowedOrigins = [
   // "http://localhost:5173",
   "https://workflow-builder-k0hc.onrender.com",
-  "https://workflow-builder-frontend-hazel.vercel.app/",
+  "https://workflow-builder-frontend-hazel.vercel.app",
 ];
 
 app.use(
