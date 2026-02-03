@@ -23,14 +23,16 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.warn(`Blocked CORS from: ${origin}`); // Log for debugging
         callback(new Error("Not allowed by CORS"));
       }
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Add OPTIONS explicitly
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
+
 app.set("trust proxy", 1);
 app.use("/auth", AuthRouter);
 app.use("/", WorkflowRouter);
