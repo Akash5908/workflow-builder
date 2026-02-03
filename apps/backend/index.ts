@@ -12,7 +12,7 @@ import { WebhookRouter } from "./routes/webhook/webhook.routes";
 const app = express();
 app.use(express.json());
 const allowedOrigins = [
-  "http://localhost:5173",
+  // "http://localhost:5173",
   "https://workflow-builder-k0hc.onrender.com",
   "https://workflow-builder-frontend-hazel.vercel.app/",
 ];

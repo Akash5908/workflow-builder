@@ -21,7 +21,7 @@ interface LoginProps {
   password: string;
 }
 
-const Login = () => {
+const LoginPage = () => {
   const [formData, setFormData] = useState<LoginProps>({
     password: "",
     username: "",
@@ -143,4 +143,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

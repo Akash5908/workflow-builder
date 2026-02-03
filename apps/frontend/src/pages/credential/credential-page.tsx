@@ -15,10 +15,15 @@ import { useCredential } from "@/hooks/useCredential";
 import { motion } from "framer-motion";
 import { ViewCredComponent } from "@/components/credential/viewCredComponent";
 import { useState } from "react";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 const CredentialPage = () => {
   const [toggle, setToggle] = useState(false);
   const { creds } = useCredential();
+
+  // Check for Auth
+  useAuthGuard("/login", false);
+
   const handleToggle = () => {
     setToggle((prev: boolean) => !prev);
   };
